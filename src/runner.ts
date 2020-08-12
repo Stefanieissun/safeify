@@ -87,7 +87,6 @@ async function run(script: Script) {
       console,
       setTimeout,
       setInterval,
-      global,
       setImmediate,
       process,
       __dirname,
