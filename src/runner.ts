@@ -81,7 +81,21 @@ async function run(script: Script) {
   const { timeout, code, params, unsafe } = script;
   const sandbox = convertParams(script.id, params);
   if (unsafe) attchUnsafe(sandbox, unsafe);
-  const vm = new VM({ sandbox, timeout });
+  // const vm = new VM({ sandbox, timeout });
+  const vm = new VM({
+    sandbox: {
+      console,
+      setTimeout,
+      setInterval,
+      global,
+      setImmediate,
+      process,
+      __dirname,
+      __filename,
+      require
+    },
+    timeout
+  });
   try {
     script.result = await vm.run(wrapCode(code));
   } catch (err) {
