@@ -12,7 +12,8 @@ const { each, isObject, isString, isArray, isDate } = require("ntils");
 const pendingCalls: Call[] = [];
 
 function wrapCode(code: string) {
-  return `(async function(Buffer){${code}})(undefined)`;
+  // return `(async function(Buffer){${code}})(undefined)`;
+  return `(async ()=>{${code}})()`;
 }
 
 function sendResult(message: any) {
@@ -81,20 +82,30 @@ async function run(script: Script) {
   const { timeout, code, params, unsafe } = script;
   const sandbox = convertParams(script.id, params);
   if (unsafe) attchUnsafe(sandbox, unsafe);
-  // const vm = new VM({ sandbox, timeout });
-  const vm = new VM({
-    sandbox: {
-      console,
-      setTimeout,
-      setInterval,
-      setImmediate,
-      process,
-      __dirname,
-      __filename,
-      require
-    },
-    timeout
+  Object.assign(VM, {
+    console,
+    setTimeout,
+    setInterval,
+    setImmediate,
+    process,
+    __dirname,
+    __filename,
+    require
   });
+  const vm = new VM({ sandbox, timeout });
+  // const vm = new VM({
+  //   sandbox: {
+  //     console,
+  //     setTimeout,
+  //     setInterval,
+  //     setImmediate,
+  //     process,
+  //     __dirname,
+  //     __filename,
+  //     require
+  //   },
+  //   timeout
+  // });
   try {
     script.result = await vm.run(wrapCode(code));
   } catch (err) {

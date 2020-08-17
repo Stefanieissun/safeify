@@ -1,9 +1,12 @@
 {
   "name": "@ali/safeify-test",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npm.alibaba-inc.com"
+  },
   "scripts": {
     "test": "dn test",
     "cover": "nyc report --reporter=text-lcov | coveralls"
